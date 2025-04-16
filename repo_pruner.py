@@ -25,13 +25,14 @@ def process_repositories():
     sort_by = 'recent' if sort_mode == 'r' else 'alpha'
     
     repos = get_repositories(g, sort_by)
+    total_repos = len(repos)
     i = 0
     
     while i < len(repos):
         try:
             repo = repos[i]
-            progress_percent = round((i / len(repos)) * 100)
-            print(f"\nProgress: Repository {i+1}/{len(repos)} ({progress_percent}% Reviewed)")
+            progress_percent = round((i / total_repos) * 100)
+            print(f"\nProgress: Repository {i+1}/{total_repos} ({progress_percent}% Reviewed)")
             print(f"Repository: {repo.name}")
             print(f"Visibility: {'Private' if repo.private else 'Public'}")
             print(f"Created: {repo.created_at}")
@@ -49,13 +50,12 @@ def process_repositories():
                     try:
                         repo.delete()
                         print(f"Deleted {repo.name}")
-                        # Refresh the repository list after deletion
-                        repos = get_repositories(g, sort_by)
+                        repos.pop(i)  # Remove from our local list
                         i -= 1  # Adjust index since we removed a repo
                     except Exception as e:
                         if "404" in str(e):
                             print(f"Repository {repo.name} was already deleted")
-                            repos = get_repositories(g, sort_by)
+                            repos.pop(i)  # Remove from our local list
                             i -= 1
                         else:
                             raise
