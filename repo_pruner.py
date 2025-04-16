@@ -28,27 +28,44 @@ def process_repositories():
     i = 0
     
     while i < len(repos):
-        repo = repos[i]
-        progress_percent = round((i / len(repos)) * 100)
-        print(f"\nProgress: Repository {i+1}/{len(repos)} ({progress_percent}% Reviewed)")
-        print(f"Repository: {repo.name}")
-        print(f"Visibility: {'Private' if repo.private else 'Public'}")
-        print(f"Created: {repo.created_at}")
-        print(f"URL: {repo.html_url}")
-        print(f"Description: {repo.description}")
-        
-        action = input("Action - (Enter/K)eep, (D)elete, (B)ack: ").lower()
-        
-        if action == 'b':
-            i = max(0, i - 1)
-            continue
-        elif action == 'd':
-            confirm = input(f"Are you sure you want to delete {repo.name}? (Y/n): ").lower()
-            if confirm != 'n':
-                repo.delete()
-                print(f"Deleted {repo.name}")
-        
-        i += 1
+        try:
+            repo = repos[i]
+            progress_percent = round((i / len(repos)) * 100)
+            print(f"\nProgress: Repository {i+1}/{len(repos)} ({progress_percent}% Reviewed)")
+            print(f"Repository: {repo.name}")
+            print(f"Visibility: {'Private' if repo.private else 'Public'}")
+            print(f"Created: {repo.created_at}")
+            print(f"URL: {repo.html_url}")
+            print(f"Description: {repo.description}")
+            
+            action = input("Action - (Enter/K)eep, (D)elete, (B)ack: ").lower()
+            
+            if action == 'b':
+                i = max(0, i - 1)
+                continue
+            elif action == 'd':
+                confirm = input(f"Are you sure you want to delete {repo.name}? (Y/n): ").lower()
+                if confirm != 'n':
+                    try:
+                        repo.delete()
+                        print(f"Deleted {repo.name}")
+                        # Refresh the repository list after deletion
+                        repos = get_repositories(g, sort_by)
+                        i -= 1  # Adjust index since we removed a repo
+                    except Exception as e:
+                        if "404" in str(e):
+                            print(f"Repository {repo.name} was already deleted")
+                            repos = get_repositories(g, sort_by)
+                            i -= 1
+                        else:
+                            raise
+            i += 1
+        except Exception as e:
+            print(f"Error processing repository: {e}")
+            action = input("(S)kip or (Q)uit? [S]: ").lower()
+            if action == 'q':
+                break
+            i += 1
 
 if __name__ == "__main__":
     try:
