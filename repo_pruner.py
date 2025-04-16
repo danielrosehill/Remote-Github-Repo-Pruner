@@ -30,6 +30,7 @@ def process_repositories():
     while i < len(repos):
         repo = repos[i]
         print(f"\nRepository: {repo.name}")
+        print(f"Visibility: {'Private' if repo.private else 'Public'}")
         print(f"Created: {repo.created_at}")
         print(f"URL: {repo.html_url}")
         print(f"Description: {repo.description}")

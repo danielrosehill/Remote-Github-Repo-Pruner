@@ -21,3 +21,6 @@ This hath been forged for those souls who, in their zeal, have amassed a great h
 **Heed this warning well**:  
 The tool shall delete thy repositories on the remote GitHub. Should thou hold any local copies, know that they shall not be altered by this act. Let it be upon thy conscience what is kept and what is lost.
 
+---
+
+This README was generated using the Shakespearean README Generator, available on ChatGPT: https://chatgpt.com/g/g-680039e168688191b596fbdcdbc24b8f-shakespearean-readme-generator
