@@ -29,7 +29,9 @@ def process_repositories():
     
     while i < len(repos):
         repo = repos[i]
-        print(f"\nRepository: {repo.name}")
+        progress_percent = round((i / len(repos)) * 100)
+        print(f"\nProgress: Repository {i+1}/{len(repos)} ({progress_percent}% Reviewed)")
+        print(f"Repository: {repo.name}")
         print(f"Visibility: {'Private' if repo.private else 'Public'}")
         print(f"Created: {repo.created_at}")
         print(f"URL: {repo.html_url}")
@@ -41,8 +43,8 @@ def process_repositories():
             i = max(0, i - 1)
             continue
         elif action == 'd':
-            confirm = input(f"Are you sure you want to delete {repo.name}? (y/N): ").lower()
-            if confirm == 'y':
+            confirm = input(f"Are you sure you want to delete {repo.name}? (Y/n): ").lower()
+            if confirm != 'n':
                 repo.delete()
                 print(f"Deleted {repo.name}")
         
